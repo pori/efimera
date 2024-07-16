@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify
+from sqlalchemy import desc
 
 from .models import Note, Link, Tag
 from .utils import save_data_to_db
@@ -25,7 +26,7 @@ def get_notes():
     per_page = request.args.get('per_page', 10, type=int)
     search = request.args.get('search', '', type=str)
 
-    query = Note.query
+    query = Note.query.order_by(desc(Note.id))
 
     if search:
         search_pattern = f"%{search}%"
