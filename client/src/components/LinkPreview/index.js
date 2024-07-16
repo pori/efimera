@@ -23,4 +23,4 @@ const LinkPreview = ({ title, description, imageUrl, linkUrl }) => {
     );
 };
 
-export default LinkPreviewCard;
+export default LinkPreview;
