@@ -15,12 +15,9 @@ export default function Instagram({ url }) {
     return (
         <iframe
             src={`https://www.instagram.com/p/${extractInstagramPostId(url)}/embed`}
-            width="400"
-            height="480"
-            frameBorder="0"
             scrolling="no"
             allowTransparency="true"
             title="Instagram post"
-        ></iframe>
+        />
     );
 }
