@@ -22,7 +22,7 @@ const App = () => {
         console.log('Searching for:', query);
     };
 
-    const handleSave = (text) => {
+    const handleSave = ({ text }) => {
         addNote(text);
     };
 
@@ -33,7 +33,7 @@ const App = () => {
             <Card>
                 <Editor initialValue="" onSave={handleSave} placeholder="Type here..." />
             </Card>
-            {notes.map(note => <ContentRenderer {...note} />)}
+            {notes.map(note => <ContentRenderer key={note.id} {...note} />)}
         </Grid>
       </Layout>
     );
