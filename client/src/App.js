@@ -5,7 +5,7 @@ import { addNote, getNotes } from "./services/notes";
 import Layout from './components/Layout';
 import Grid from './components/Grid';
 import Card from './components/Card';
-import SearchBar from './components/SearchBar';
+// import SearchBar from './components/SearchBar';
 import Editor from './components/Editor';
 import ContentRenderer from "./components/Content";
 
@@ -18,9 +18,9 @@ const App = () => {
         getNotes(1).then(setNotes);
     }, [getNotes]);
 
-    const handleSearch = (query) => {
-        console.log('Searching for:', query);
-    };
+    // const handleSearch = (query) => {
+    //     console.log('Searching for:', query);
+    // };
 
     const handleSave = ({ text }) => {
         addNote(text);
@@ -28,7 +28,7 @@ const App = () => {
 
     return (
       <Layout>
-        <SearchBar onSearch={handleSearch} />
+        {/*<SearchBar onSearch={handleSearch} />*/}
         <Grid>
             <Card>
                 <Editor initialValue="" onSave={handleSave} placeholder="Type here..." />
