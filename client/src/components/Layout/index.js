@@ -17,4 +17,3 @@ const Layout = ({ children }) => {
 };
 
 export default Layout;
-x
