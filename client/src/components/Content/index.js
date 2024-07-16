@@ -10,6 +10,12 @@ export default function Content({
     links,
     tags
 }) {
+    if (links.length === 1) {
+        const [link] = links;
+
+        return <Embed {...link } />
+    }
+
     return (
         <Card>
             <Markdown>{text}</Markdown>
