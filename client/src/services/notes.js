@@ -31,5 +31,5 @@ export async function getNotes(page = 1, perPage = 10) {
     const response = await fetch(`${API_BASE_URL}/notes?page=${page}&per_page=${perPage}`);
     const data = await response.json();
 
-    return data;
+    return data.notes;
 }
