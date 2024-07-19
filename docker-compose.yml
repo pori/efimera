@@ -10,5 +10,24 @@ services:
       volumes:
         - db_data:/data/db
 
+    server:
+      build: ./server
+      image: efimera-server
+      environment:
+        - DATABASE_URL=postgresql://postgres:postgres@database/efimera
+      ports:
+        - "5000:5000"
+      depends_on:
+        - database
+
+    client:
+      build:
+        context: ./client
+        args:
+          REACT_APP_API_BASE_URL: ${REACT_APP_API_BASE_URL:-https://localhost:5000 }
+      image: efimera-client
+      ports:
+        - "3000:80"
+
 volumes:
   db_data:
