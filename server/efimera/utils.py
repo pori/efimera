@@ -41,8 +41,6 @@ def save_data_to_db(text_blob):
 
         db.session.add(link)
         db.session.commit()
-    else:
-        raise ValueError("No link found in the text blob")
 
     # Extract hashtags
     tags = re.findall(r'#\w+', text_blob)
