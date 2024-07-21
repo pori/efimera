@@ -17,7 +17,7 @@ import './App.css';
  * @param url
  * @returns {Promise<any>}
  */
-const fetcher = async (page) => {
+const fetcher = async ([page]) => {
     return await getNotes(page);
 };
 
