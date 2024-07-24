@@ -1,5 +1,6 @@
 import uuid
 
+from datetime import datetime
 from sqlalchemy.dialects.postgresql import UUID
 
 from .extensions import db
@@ -8,6 +9,8 @@ from .extensions import db
 class Note(db.Model):
     id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     text = db.Column(db.Text, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     links = db.relationship('Link', backref='note', lazy=True)
     tags = db.relationship('Tag', backref='note', lazy=True)
 

@@ -26,7 +26,7 @@ def get_notes():
     per_page = request.args.get('per_page', 12, type=int)
     search = request.args.get('search', '', type=str)
 
-    query = Note.query.order_by(desc(Note.id))
+    query = Note.query.order_by(desc(Note.created_at))
 
     if search:
         search_pattern = f"%{search}%"
