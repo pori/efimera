@@ -6,6 +6,7 @@ const Editor = ({ initialValue, onSave, placeholder }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         onSave({ text });
+        setText('');
     };
 
     return (

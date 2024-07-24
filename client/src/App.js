@@ -1,3 +1,4 @@
+import { mutate } from 'swr';
 import useSWRInfinite from "swr/infinite";
 import InfiniteScroll from "react-infinite-scroller";
 
@@ -39,8 +40,10 @@ const App = () => {
     //     console.log('Searching for:', query);
     // };
 
-    const handleSave = ({ text }) => {
-        addNote(text);
+    const handleSave = async ({ text }) => {
+        await addNote(text);
+
+        mutate(getKey(0, null));
     };
     
     const notes = data ? [].concat(...data) : [];
