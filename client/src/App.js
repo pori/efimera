@@ -42,27 +42,37 @@ const App = () => {
     const handleSave = ({ text }) => {
         addNote(text);
     };
-
+    
     const notes = data ? [].concat(...data) : [];
-    const isLoadingInitialData = !data && !error;
-    const isLoadingMore = isLoadingInitialData || (data && typeof data[size - 1] === "undefined");
-    const isEmpty = data?.[0]?.length === 0;
-    const isReachingEnd = isEmpty || (data && data[data.length - 1]?.length < 10)
+    const isLoading = !data && !error
+    const isLoadingMore =
+        isLoading || (size > 0 && data && !data[size - 1])
+    const hasMore = !!(
+        data &&
+        data[data.length - 1] &&
+        data[data.length - 1].length === 12
+    )
 
     return (
       <Layout>
-        {/*<SearchBar onSearch={handleSearch} />*/}
+          {/*<SearchBar onSearch={handleSearch} />*/}
           <InfiniteScroll
               pageStart={0}
-              loadMore={setSize}
-              hasMore={!isLoadingMore && !isReachingEnd}
+              loadMore={() => {
+                  if (isLoadingMore || !size || !setSize) {
+                      return;
+                  }
+
+                  setSize(size + 1);
+              }}
+              hasMore={hasMore}
           >
             <Grid>
                 <Card>
                     <Editor initialValue="" onSave={handleSave} placeholder="Type here..." />
                 </Card>
 
-                    {notes.map(note => <ContentRenderer key={note.id} {...note} />)}
+                {notes.map(note => <ContentRenderer key={note.id} {...note} />)}
             </Grid>
           </InfiniteScroll>
       </Layout>

@@ -23,7 +23,7 @@ def parse_text():
 @bp.route('/notes', methods=['GET'])
 def get_notes():
     page = request.args.get('page', 1, type=int)
-    per_page = request.args.get('per_page', 10, type=int)
+    per_page = request.args.get('per_page', 12, type=int)
     search = request.args.get('search', '', type=str)
 
     query = Note.query.order_by(desc(Note.id))
