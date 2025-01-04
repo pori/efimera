@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 from sqlalchemy import desc
 
 from .models import Note, Link, Tag
-from .utils import save_data_to_db
+from .tasks import save_data_to_db_task
 
 bp = Blueprint('main', __name__)
 
@@ -14,11 +14,17 @@ def parse_text():
 
     text_blob = data['text']
     try:
-        save_data_to_db(text_blob)
+        # Launch the Celery task asynchronously
+        task = save_data_to_db_task.delay(text_blob)
+        
+        # Return the task ID to the client for status checking
+        return jsonify({
+            'message': 'Task scheduled successfully',
+            'task_id': task.id
+        }), 202  # 202 Accepted indicates the request was accepted but processing is ongoing
+
     except Exception as e:
         return jsonify({'error': str(e)}), 500
-
-    return jsonify({'message': 'Data saved successfully'}), 200
 
 @bp.route('/notes', methods=['GET'])
 def get_notes():
