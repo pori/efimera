@@ -13,6 +13,7 @@ psycopg2-binary = "*"
 flask-cors = "*"
 gunicorn = "*"
 celery = "*"
+redis = "*"
 
 [dev-packages]
 python-dotenv = "*"
