@@ -7,10 +7,15 @@ def create_app(config_class="config.Config"):
 
     CORS(app)
 
-    from .extensions import db, migrate
+    from .extensions import db, migrate, celery_init_app 
+
+    # Database
     db.init_app(app)
     migrate.init_app(app, db)
 
+    # Queue
+    celery_init_app(app)
+    
     from .routes import bp
     app.register_blueprint(bp)
 
