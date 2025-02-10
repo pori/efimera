@@ -3,9 +3,12 @@ from sqlalchemy import desc
 
 from .extensions import db
 from .models import Note, Link, Tag
+from .schemas import NoteSchema
 from .tasks import process_assets
 
 bp = Blueprint('main', __name__)
+
+note_schema = NoteSchema()
 
 @bp.route('/notes', methods=['POST'])
 def parse_text():
@@ -19,9 +22,9 @@ def parse_text():
 
     db.session.add(note)
     db.session.commit()
-    process_assets.delay(note)
+    process_assets.delay(note.id)
 
-    return jsonify(note)
+    return note_schema.dump(note)
 
 
 @bp.route('/notes', methods=['GET'])
