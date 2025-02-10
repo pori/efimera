@@ -5,6 +5,9 @@ from .extensions import db
 from .models import Tag, Link, Note
 
 import re
+import requests
+
+from .objects import upload_from, is_downloadable
 
 
 @shared_task(bind=True, max_retries=3)
@@ -20,29 +23,38 @@ def fetch_content(self, url, link_id):
     Fetch metadata from a URL using Playwright.
     Returns tuple of (title, description, image)
     """
-    with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True)
-        page = browser.new_page()
-        page.goto(url, wait_until='networkidle')
+    # First check if it's downloadable content
+    response = requests.head(url, allow_redirects=True)
+    content_type = response.headers.get('content-type', '')
 
-        # Evaluate JavaScript to get metadata
-        metadata = page.evaluate("""() => {
-            const getContent = (selector) => {
-                const element = document.querySelector(selector);
-                return element ? element.content : null;
-            };
+    if is_downloadable(content_type):
+        content_url = upload_from(url)
 
-            return {
-                title: document.title,
-                description: getContent('meta[property="og:description"]') || 
-                            getContent('meta[name="description"]'),
-                image: getContent('meta[property="og:image"]')
-            };
-        }""")
+        # TODO: associate with note
+    else:
+        with sync_playwright() as p:
+            browser = p.chromium.launch(headless=True)
+            page = browser.new_page()
+            page.goto(url, wait_until='networkidle')
 
-        browser.close()
+            # Evaluate JavaScript to get metadata
+            metadata = page.evaluate("""() => {
+                const getContent = (selector) => {
+                    const element = document.querySelector(selector);
+                    return element ? element.content : null;
+                };
+    
+                return {
+                    title: document.title,
+                    description: getContent('meta[property="og:description"]') || 
+                                getContent('meta[name="description"]'),
+                    image: getContent('meta[property="og:image"]')
+                };
+            }""")
 
-        save_metadata.delay(link_id, metadata)
+            browser.close()
+
+            save_metadata.delay(link_id, metadata)
 
 
 @shared_task(bind=True, max_retries=3)
