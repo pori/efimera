@@ -15,6 +15,7 @@ gunicorn = "*"
 celery = "*"
 redis = "*"
 async-timeout = "*"
+playwright = "*"
 
 [dev-packages]
 python-dotenv = "*"
