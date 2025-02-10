@@ -8,7 +8,14 @@ import re
 
 
 @shared_task(bind=True, max_retries=3)
-def fetch_metadata(self, url, link_id):
+def save_metadata(self, link_id, metadata):
+    Link.query.filter_by(id=link_id).update(metadata)
+
+    db.session.commit()
+
+
+@shared_task(bind=True, max_retries=3)
+def fetch_content(self, url, link_id):
     """
     Fetch metadata from a URL using Playwright.
     Returns tuple of (title, description, image)
@@ -35,23 +42,7 @@ def fetch_metadata(self, url, link_id):
 
         browser.close()
 
-        return (
-            link_id,
-            {
-                'title': metadata.get('title'),
-                'description': metadata.get('description'),
-                'image': metadata.get('image'),
-            }
-        )
-
-
-@shared_task(bind=True, max_retries=3)
-def save_metadata(self, link):
-    link_id, metadata = link
-
-    Link.query.filter_by(id=link_id).update(metadata)
-
-    db.session.commit()
+        save_metadata.delay(link_id, metadata)
 
 
 @shared_task(bind=True, max_retries=3)
@@ -68,11 +59,7 @@ def process_assets(self, note_id):
         db.session.add(link)
         db.session.commit()
 
-        chain(
-            fetch_metadata.s(link_url, link.id),
-            save_metadata.s(),
-        ).apply_async()
-
+        fetch_content.delay(link_url, link.id)
 
     # Extract hashtags
     tags = re.findall(r'#\w+', note.text)
