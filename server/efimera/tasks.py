@@ -2,7 +2,7 @@ from playwright.sync_api import sync_playwright
 from celery import shared_task
 
 from .extensions import db
-from .models import Tag, Link
+from .models import Tag, Link, Note
 
 import re
 
@@ -43,10 +43,11 @@ def fetch_metadata(self, url):
 
 
 @shared_task(bind=True, max_retries=3)
-def process_assets(self, note):
+def process_assets(self, note_id):
+    note = Note.query.get(note_id)
 
     # Extract links
-    link_matches = re.search(r'https?://\S+', note.text)
+    link_matches = re.finditer(r'https?://\S+', note.text)
     for match in link_matches:
         link_url = match.group(0)
         title, description, image = fetch_metadata.delay(link_url).get()
