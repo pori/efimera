@@ -49,7 +49,7 @@ def process_assets(note):
     link_matches = re.search(r'https?://\S+', note.text)
     for match in link_matches:
         link_url = match.group(0)
-        title, description, image = fetch_metadata(link_url)
+        title, description, image = fetch_metadata.delay(link_url).get()
         link = Link(url=link_url, title=title, description=description, image=image, note_id=note.id)
 
         db.session.add(link)
