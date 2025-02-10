@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "94fac1cc655bca654187b349cb0cd9e2ce7d859b0da042f4f88fa9d13514ae4c"
+            "sha256": "41b7c8e7b54e2c7693b4e979253599bd8298bf22833e9a0d77d533435efb6d7c"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -220,6 +220,15 @@
             "index": "pypi",
             "version": "==5.0.0"
         },
+        "flask-marshmallow": {
+            "hashes": [
+                "sha256:27a35d0ce5dcba161cc5f2f4764afbc2536c93fa439a793250b827835e3f3be6",
+                "sha256:c0a0644b46406851873ab41c1e8a7de3ef27fa69b00b89bf630f1696ec0813a0"
+            ],
+            "index": "pypi",
+            "markers": "python_version >= '3.9'",
+            "version": "==1.3.0"
+        },
         "flask-migrate": {
             "hashes": [
                 "sha256:1a336b06eb2c3ace005f5f2ded8641d534c18798d64061f6ff11f79e1434126d",
@@ -432,6 +441,23 @@
             ],
             "markers": "python_version >= '3.9'",
             "version": "==3.0.2"
+        },
+        "marshmallow": {
+            "hashes": [
+                "sha256:3350409f20a70a7e4e11a27661187b77cdcaeb20abca41c1454fe33636bea09c",
+                "sha256:e6d8affb6cb61d39d26402096dc0aee12d5a26d490a121f118d2e81dc0719dc6"
+            ],
+            "markers": "python_version >= '3.9'",
+            "version": "==3.26.1"
+        },
+        "marshmallow-sqlalchemy": {
+            "hashes": [
+                "sha256:92f389f95f21f6038e5e8be16e6fb89a1d0e25e2fe6ba661fa34b955fac20422",
+                "sha256:ca169a26171077af8afa25789e9781680de0e9187563c422f1f67d0a0133433a"
+            ],
+            "index": "pypi",
+            "markers": "python_version >= '3.9'",
+            "version": "==1.4.0"
         },
         "packaging": {
             "hashes": [
