@@ -13,8 +13,6 @@ services:
     cache:
       image: redis
       restart: always
-      volumes:
-        - cache_data:
 
     server:
       build: ./server
