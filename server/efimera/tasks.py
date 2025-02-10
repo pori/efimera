@@ -34,22 +34,22 @@ def fetch_metadata(self, url, link_id):
         }""")
 
         browser.close()
-        print(metadata.get('title'))
+
         return (
-            metadata.get('title'),
-            metadata.get('description'),
-            metadata.get('image'),
             link_id,
+            {
+                'title': metadata.get('title'),
+                'description': metadata.get('description'),
+                'image': metadata.get('image'),
+            }
         )
 
 
 @shared_task(bind=True, max_retries=3)
-def save_metadata(self, title, description, image, link_id):
-    Link.query.filter_by(id=link_id).update({
-        'title': title,
-        'description': description,
-        'image': image,
-    })
+def save_metadata(self, link):
+    link_id, metadata = link
+
+    Link.query.filter_by(id=link_id).update(metadata)
 
     db.session.commit()
 
@@ -71,7 +71,7 @@ def process_assets(self, note_id):
         chain(
             fetch_metadata.s(link_url, link.id),
             save_metadata.s(),
-        )
+        ).apply_async()
 
 
     # Extract hashtags
