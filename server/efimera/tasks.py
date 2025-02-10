@@ -32,8 +32,8 @@ def fetch_metadata(url):
 @shared_task(bind=True, max_retries=3)
 def process_assets(note):
 
+    # Extract links
     link_matches = re.search(r'https?://\S+', note.text)
-
     for match in link_matches:
         link_url = match.group(0)
         title, description, image = fetch_metadata(link_url)
