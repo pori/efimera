@@ -17,6 +17,7 @@ async-timeout = "*"
 playwright = "*"
 marshmallow-sqlalchemy = "*"
 flask-marshmallow = "*"
+minio = "*"
 
 [dev-packages]
 python-dotenv = "*"
