@@ -10,6 +10,12 @@ services:
       volumes:
         - db_data:/data/db
 
+    cache:
+      image: redis
+      restart: always
+      volumes:
+        - cache_data:
+
     server:
       build: ./server
       image: efimera-server
@@ -31,3 +37,4 @@ services:
 
 volumes:
   db_data:
+  cache_data:
