@@ -8,7 +8,7 @@ import re
 
 
 @shared_task(bind=True, max_retries=3)
-def fetch_metadata(url):
+def fetch_metadata(self, url):
     """
     Fetch metadata from a URL using Playwright.
     Returns tuple of (title, description, image)
@@ -43,7 +43,7 @@ def fetch_metadata(url):
 
 
 @shared_task(bind=True, max_retries=3)
-def process_assets(note):
+def process_assets(self, note):
 
     # Extract links
     link_matches = re.search(r'https?://\S+', note.text)
