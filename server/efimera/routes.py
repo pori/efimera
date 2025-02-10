@@ -16,9 +16,9 @@ def parse_text():
 
     text_blob = data['text']
     note = Note(text=text_blob)
+
     db.session.add(note)
     db.session.commit()
-
     process_assets.delay(note)
 
     return jsonify(note)
