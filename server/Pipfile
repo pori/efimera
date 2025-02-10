@@ -6,7 +6,6 @@ name = "pypi"
 [packages]
 flask = "*"
 requests = "*"
-beautifulsoup4 = "*"
 flask-sqlalchemy = "*"
 flask-migrate = "*"
 psycopg2-binary = "*"
@@ -15,6 +14,9 @@ gunicorn = "*"
 celery = "*"
 redis = "*"
 async-timeout = "*"
+playwright = "*"
+marshmallow-sqlalchemy = "*"
+flask-marshmallow = "*"
 
 [dev-packages]
 python-dotenv = "*"
@@ -22,4 +24,4 @@ pytest = "*"
 requests-mock = "*"
 
 [requires]
-python_version = "3.11"
+python_version = "3.12"

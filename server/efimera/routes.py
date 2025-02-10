@@ -1,30 +1,31 @@
 from flask import Blueprint, request, jsonify
 from sqlalchemy import desc
 
+from .extensions import db
 from .models import Note, Link, Tag
-from .tasks import save_data_to_db_task
+from .schemas import NoteSchema
+from .tasks import process_assets
 
 bp = Blueprint('main', __name__)
+
+note_schema = NoteSchema()
 
 @bp.route('/notes', methods=['POST'])
 def parse_text():
     data = request.json
+
     if 'text' not in data:
         return jsonify({'error': 'No text provided'}), 400
 
     text_blob = data['text']
-    try:
-        # Launch the Celery task asynchronously
-        task = save_data_to_db_task.delay(text_blob)
-        
-        # Return the task ID to the client for status checking
-        return jsonify({
-            'message': 'Task scheduled successfully',
-            'task_id': task.id
-        }), 202  # 202 Accepted indicates the request was accepted but processing is ongoing
+    note = Note(text=text_blob)
 
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
+    db.session.add(note)
+    db.session.commit()
+    process_assets.delay(note.id)
+
+    return note_schema.dump(note)
+
 
 @bp.route('/notes', methods=['GET'])
 def get_notes():
