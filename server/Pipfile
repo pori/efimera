@@ -12,6 +12,9 @@ flask-migrate = "*"
 psycopg2-binary = "*"
 flask-cors = "*"
 gunicorn = "*"
+celery = "*"
+redis = "*"
+async-timeout = "*"
 
 [dev-packages]
 python-dotenv = "*"
@@ -19,4 +22,4 @@ pytest = "*"
 requests-mock = "*"
 
 [requires]
-python_version = "3.10"
+python_version = "3.11"
