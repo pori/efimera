@@ -16,5 +16,20 @@ services:
       ports:
         - 6379:6379
 
+    objects:
+      image: minio/minio
+      restart: always
+      ports:
+        - "9000:9000"    # API port
+        - "9001:9001"    # Console port
+      environment:
+        MINIO_ROOT_USER: minioadmin
+        MINIO_ROOT_PASSWORD: minioadmin
+      volumes:
+        - objects_data:/data
+      command: server /data --console-address ":9001"
+
 volumes:
+  objects_data:
+    driver: local
   db_data:
