@@ -1,32 +1,45 @@
+from playwright.sync_api import sync_playwright
 from celery import shared_task
-from bs4 import BeautifulSoup
 
 from .extensions import db
-from .models import Note, Tag, Link
+from .models import Tag, Link
 
-import requests
 import re
 
 
+@shared_task(bind=True, max_retries=3)
 def fetch_metadata(url):
-    response = requests.get(url)
-    soup = BeautifulSoup(response.text, 'html.parser')
+    """
+    Fetch metadata from a URL using Playwright.
+    Returns tuple of (title, description, image)
+    """
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=True)
+        page = browser.new_page()
+        page.goto(url, wait_until='networkidle')
 
-    title = soup.find('title').text if soup.find('title') else None
-    description = None
-    image = None
+        # Evaluate JavaScript to get metadata
+        metadata = page.evaluate("""() => {
+            const getContent = (selector) => {
+                const element = document.querySelector(selector);
+                return element ? element.content : null;
+            };
 
-    # Find description
-    if soup.find("meta", property="og:description"):
-        description = soup.find("meta", property="og:description")["content"]
-    elif soup.find("meta", attrs={"name": "description"}):
-        description = soup.find("meta", attrs={"name": "description"})["content"]
+            return {
+                title: document.title,
+                description: getContent('meta[property="og:description"]') || 
+                            getContent('meta[name="description"]'),
+                image: getContent('meta[property="og:image"]')
+            };
+        }""")
 
-    # Find image
-    if soup.find("meta", property="og:image"):
-        image = soup.find("meta", property="og:image")["content"]
+        browser.close()
 
-    return title, description, image
+        return (
+            metadata.get('title'),
+            metadata.get('description'),
+            metadata.get('image')
+        )
 
 
 @shared_task(bind=True, max_retries=3)
